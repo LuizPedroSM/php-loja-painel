@@ -9,7 +9,14 @@ class LoginController extends Controller
 
 	public function index() 
 	{
-		$array = array();		
+		$array = array(
+			'error' => ''
+		);
+		
+		if (!empty($_SESSION['errorMsg'])) {
+			$array['error'] = $_SESSION['errorMsg'];
+			$_SESSION['errorMsg'] = '';
+		}
 
 		$this->loadView('login', $array);
 	}
@@ -24,7 +31,11 @@ class LoginController extends Controller
 
 			if ($u->validateLogin($email,$password)) {
 				header("Location: ".BASE_URL);exit;				
+			} else {				
+				$_SESSION['errorMsg'] = 'Usuário e/ou senha errados.';
 			}
+		} else {				
+			$_SESSION['errorMsg'] = 'Preencha os campos abaixo.';
 		}
 		header("Location: ".BASE_URL."login");exit;
 	}

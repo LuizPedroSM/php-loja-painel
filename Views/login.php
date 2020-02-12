@@ -36,6 +36,12 @@
   <div class="login-box-body">
     <p class="login-box-msg">Faça login no painel administrativo</p>
 
+  <?php if(!empty($error)): ?>
+    <div class="callout callout-danger">
+        <p><?php echo $error; ?></p>
+    </div>
+  <?php endif; ?>
+
     <form action="<?php echo BASE_URL; ?>login/index_action" method="post">
       <div class="form-group has-feedback">
         <input type="email" name="email" class="form-control" placeholder="Email">
