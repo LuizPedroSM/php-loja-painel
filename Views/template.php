@@ -261,7 +261,7 @@ desired effect
         <!-- Optionally, you can add icons to the links -->
         <li class="active"><a href="<?php echo BASE_URL; ?>"><i class="fa fa-link"></i> <span>Dashboard</span></a></li>
 
-        <?php if( $viewData['user']->hasPermission('permission_view') ): ?>
+        <?php if( $viewData['user']->hasPermission('permissions_view') ): ?>
           <li><a href="<?php echo BASE_URL; ?>permissions"><i class="fa fa-link"></i> <span>Permissões</span></a></li>
         <?php endif; ?>
 
