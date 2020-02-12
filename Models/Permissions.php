@@ -54,6 +54,20 @@ class Permissions extends Model
 		return $array;
 	}
 
+	public function getAllItems()
+	{
+		$array = array();
+
+		$sql = "SELECT * FROM permission_items";
+		$sql = $this->db->query($sql);
+
+		if ($sql->rowCount() > 0) {
+			$array = $sql->fetchAll(\PDO::FETCH_ASSOC);
+		}
+
+		return $array;
+	}
+
 	public function deleteGroup($id_group)
 	{
 		$sql = "SELECT id FROM users WHERE id_permission = :id_group";
@@ -72,6 +86,25 @@ class Permissions extends Model
 			$sql->bindValue(':id_group', $id_group);
 			$sql->execute();
 		}
+	}
+
+	public function addGroup($name)
+	{
+		$sql = "INSERT INTO permission_groups (name) VALUES (:name)";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':name', $name);
+		$sql->execute();
+
+		return $this->db->lastInsertId();
+	}
+
+	public function linkItemToGroup($id_item, $id_group)
+	{
+		$sql = "INSERT INTO permission_links (id_permission_group, id_permission_item) VALUES (:id_group, :id_item)";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':id_item', $id_item);
+		$sql->bindValue(':id_group', $id_group);
+		$sql->execute();
 	}
 
 }
