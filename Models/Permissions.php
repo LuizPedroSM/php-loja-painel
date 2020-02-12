@@ -54,4 +54,24 @@ class Permissions extends Model
 		return $array;
 	}
 
+	public function deleteGroup($id_group)
+	{
+		$sql = "SELECT id FROM users WHERE id_permission = :id_group";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':id_group', $id_group);
+		$sql->execute();
+
+		if ($sql->rowCount() === 0) {
+			$sql = "DELETE FROM permission_links WHERE id_permission_group = :id_group";
+			$sql = $this->db->prepare($sql);
+			$sql->bindValue(':id_group', $id_group);
+			$sql->execute();
+
+			$sql = "DELETE FROM permission_groups WHERE id = :id_group";
+			$sql = $this->db->prepare($sql);
+			$sql->bindValue(':id_group', $id_group);
+			$sql->execute();
+		}
+	}
+
 }

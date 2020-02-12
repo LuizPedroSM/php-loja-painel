@@ -35,4 +35,11 @@ class PermissionsController extends Controller
 
 		$this->loadTemplate('permissions', $array);		
 	}
+
+	public function del($id_group)
+	{
+		$p = new Permissions();
+		$p->deleteGroup($id_group);
+		header("Location: ".BASE_URL.'permissions');exit;
+	}
 }
