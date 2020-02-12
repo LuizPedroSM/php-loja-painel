@@ -3,6 +3,7 @@ namespace Controllers;
 
 use \Core\Controller;
 use \Models\Users;
+use \Models\Permissions;
 
 class PermissionsController extends Controller 
 {
@@ -25,8 +26,12 @@ class PermissionsController extends Controller
 	public function index() 
 	{		
 		$array = array(
-			'user' => $this->user
+			'user' => $this->user,
+			'list' => array()
 		);		
+
+		$p = new Permissions();
+		$array['list'] = $p->getAllGroups();
 
 		$this->loadTemplate('permissions', $array);		
 	}

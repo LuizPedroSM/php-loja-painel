@@ -38,9 +38,19 @@ class Permissions extends Model
 		return $array;
 	}
 
-	public function getAll() {
+	public function getAllGroups() {
 		$array = array();
 
+		$sql = "SELECT permission_groups.* ,
+		(SELECT COUNT(users.id) FROM users
+		WHERE users.id_permission = permission_groups.id		
+		) as total_users		
+		FROM permission_groups";
+		$sql = $this->db->query($sql);
+
+		if ($sql->rowCount() > 0) {
+			$array = $sql->fetchAll(\PDO::FETCH_ASSOC);
+		}
 		return $array;
 	}
 
