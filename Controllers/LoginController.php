@@ -39,4 +39,10 @@ class LoginController extends Controller
 		}
 		header("Location: ".BASE_URL."login");exit;
 	}
+
+	public function logout()
+	{
+		unset($_SESSION['token']);
+		header("Location: ".BASE_URL);exit;
+	}
 }
