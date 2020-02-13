@@ -47,4 +47,13 @@ class Categories extends Model
 		}
 		return false;
 	}
+
+	public function add($name, $sub)
+	{
+		$sql = "INSERT INTO categories (name, sub) VALUES (:name, :sub)";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':name', $name);
+		$sql->bindValue(':sub', $sub);
+		$sql->execute();
+	}
 }

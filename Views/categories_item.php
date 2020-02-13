@@ -3,7 +3,7 @@
     <td>
         <?php 
             for($q = 0; $q < $level; $q++)
-            echo '-- ';
+            echo '> ';
             echo $item['name'];
         ?>
     </td>
