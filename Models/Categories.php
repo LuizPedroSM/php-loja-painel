@@ -56,4 +56,28 @@ class Categories extends Model
 		$sql->bindValue(':sub', $sub);
 		$sql->execute();
 	}
+
+	public function get($id)
+	{
+		$array = array();
+		$sql = "SELECT name, sub FROM categories WHERE id = :id";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':id', $id);
+		$sql->execute();
+
+		if ($sql->rowCount() > 0) {
+			$array = $sql->fetch(\PDO::FETCH_ASSOC);
+		}
+		return $array;
+	}
+
+	public function update($name, $sub, $id)
+	{
+		$sql = "UPDATE categories SET name = :name, sub = :sub WHERE id = :id";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':name', $name);
+		$sql->bindValue(':sub', $sub);
+		$sql->bindValue(':id', $id);
+		$sql->execute();
+	}
 }
