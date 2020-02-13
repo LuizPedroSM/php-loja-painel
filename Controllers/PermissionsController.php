@@ -21,32 +21,25 @@ class PermissionsController extends Controller
 		if (!$this->user->hasPermission('permissions_view')) {
 			header("Location: ".BASE_URL);exit;
 		}
+
+		$this->arrayInfo = array(
+			'user' => $this->user,
+			'menuActive' => 'permissions'
+		);	
 	}
 
 	public function index() 
 	{		
-		$array = array(
-			'user' => $this->user,
-			'list' => array()
-		);		
-
 		$p = new Permissions();
-		$array['list'] = $p->getAllGroups();
-
-		$this->loadTemplate('permissions', $array);		
+		$this->arrayInfo['list'] = $p->getAllGroups();	
+		$this->loadTemplate('permissions', $this->arrayInfo);		
 	}
 
 	public function items() 
 	{		
-		$array = array(
-			'user' => $this->user,
-			'list' => array()
-		);		
-
 		$p = new Permissions();
-		$array['list'] = $p->getAllItems();
-
-		$this->loadTemplate('permissions_items', $array);		
+		$this->arrayInfo['list'] = $p->getAllItems();
+		$this->loadTemplate('permissions_items', $this->arrayInfo);		
 	}
 
 	public function del($id_group)
@@ -65,35 +58,25 @@ class PermissionsController extends Controller
 
 	public function add()
 	{
-		$array = array(
-			'user' => $this->user,
-			'errorItems' => array()
-		);
 		$p = new Permissions();
-
-		$array['permission_items'] = $p->getAllItems();
+		$this->arrayInfo['errorItems'] = array();
+		$this->arrayInfo['permission_items'] = $p->getAllItems();
 
 		if (isset($_SESSION['formError']) && count($_SESSION['formError']) > 0 ) {
-			$array['errorItems'] = $_SESSION['formError'];
+			$this->arrayInfo['errorItems'] = $_SESSION['formError'];
 			unset($_SESSION['formError']);
 		}
-
-		$this->loadTemplate('permissions_add', $array);		
+		$this->loadTemplate('permissions_add', $this->arrayInfo);		
 	}
 
 	public function items_add()
 	{
-		$array = array(
-			'user' => $this->user,
-			'errorItems' => array()
-		);
-
+		$this->arrayInfo['errorItems'] = array();
 		if (isset($_SESSION['formError']) && count($_SESSION['formError']) > 0 ) {
-			$array['errorItems'] = $_SESSION['formError'];
+			$this->arrayInfo['errorItems'] = $_SESSION['formError'];
 			unset($_SESSION['formError']);
 		}
-
-		$this->loadTemplate('permissions_items_add', $array);	
+		$this->loadTemplate('permissions_items_add', $this->arrayInfo);	
 	}
 
 	public function add_action()
@@ -111,7 +94,6 @@ class PermissionsController extends Controller
 					$p->linkItemToGroup($item, $id);
 				}
 			}
-
 			header("Location: ".BASE_URL.'permissions');exit;
 		} else {
 			$_SESSION['formError'] = array('name');
@@ -139,23 +121,18 @@ class PermissionsController extends Controller
 	public function edit($id)
 	{
 		if (!empty($id)) {			
-			$array = array(
-				'user' => $this->user,
-				'errorItems' => array()
-			);
 			$p = new Permissions();
-	
-			$array['permission_items'] = $p->getAllItems();
-			$array['permission_id'] = $id;
-			$array['permission_group_name'] = $p->getPermissionGroupName($id);
-			$array['permission_group_slugs'] = $p->getPermissions($id);
+			$this->arrayInfo['errorItems'] = array();
+			$this->arrayInfo['permission_items'] = $p->getAllItems();
+			$this->arrayInfo['permission_id'] = $id;
+			$this->arrayInfo['permission_group_name'] = $p->getPermissionGroupName($id);
+			$this->arrayInfo['permission_group_slugs'] = $p->getPermissions($id);
 	
 			if (isset($_SESSION['formError']) && count($_SESSION['formError']) > 0 ) {
-				$array['errorItems'] = $_SESSION['formError'];
+				$this->arrayInfo['errorItems'] = $_SESSION['formError'];
 				unset($_SESSION['formError']);
-			}
-	
-			$this->loadTemplate('permissions_edit', $array);	
+			}	
+			$this->loadTemplate('permissions_edit', $this->arrayInfo);	
 		} else {			
 			header("Location: ".BASE_URL.'permissions');exit;	
 		}
@@ -164,20 +141,15 @@ class PermissionsController extends Controller
 	public function items_edit($id)
 	{
 		if (!empty($id)) {			
-			$array = array(
-				'user' => $this->user,
-				'errorItems' => array()
-			);
 			$p = new Permissions();
-	
-			$array['permission_item'] = $p->getItem($id);
+			$this->arrayInfo['errorItems'] = array();
+			$this->arrayInfo['permission_item'] = $p->getItem($id);
 			
 			if (isset($_SESSION['formError']) && count($_SESSION['formError']) > 0 ) {
-				$array['errorItems'] = $_SESSION['formError'];
+				$this->arrayInfo['errorItems'] = $_SESSION['formError'];
 				unset($_SESSION['formError']);
-			}
-	
-			$this->loadTemplate('permissions_items_edit', $array);	
+			}	
+			$this->loadTemplate('permissions_items_edit', $this->arrayInfo);	
 		} else {			
 			header("Location: ".BASE_URL.'permissions/items');exit;
 		}

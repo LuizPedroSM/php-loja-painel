@@ -259,10 +259,14 @@ desired effect
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">HEADER</li>
         <!-- Optionally, you can add icons to the links -->
-        <li class="active"><a href="<?php echo BASE_URL; ?>"><i class="fa fa-link"></i> <span>Dashboard</span></a></li>
+        <li class="<?php echo ($viewData['menuActive'] == 'home')? 'active' : ''; ?>"><a href="<?php echo BASE_URL; ?>">
+          <i class="fa fa-link"></i> <span>Dashboard</span></a>
+        </li>
 
         <?php if( $viewData['user']->hasPermission('permissions_view') ): ?>
-          <li><a href="<?php echo BASE_URL; ?>permissions"><i class="fa fa-link"></i> <span>Permissões</span></a></li>
+          <li class="<?php echo ($viewData['menuActive'] == 'permissions')? 'active' : ''; ?>"><a href="<?php echo BASE_URL; ?>permissions">
+            <i class="fa fa-link"></i> <span>Permissões</span></a>
+          </li>
         <?php endif; ?>
 
 
