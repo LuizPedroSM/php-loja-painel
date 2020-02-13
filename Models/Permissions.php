@@ -82,9 +82,34 @@ class Permissions extends Model
 		return $array;
 	}
 
+	public function getItem($id)
+	{
+		$array = array();
+
+		$sql = "SELECT * FROM permission_items WHERE id = :id";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':id', $id);
+		$sql->execute();
+
+		if ($sql->rowCount() > 0) {
+			$array = $sql->fetch();
+		}
+
+		return $array;
+	}
+
 	public function editName($new_name, $id)
 	{
 		$sql = "UPDATE permission_groups SET name = :name WHERE id = :id";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':name', $new_name);
+		$sql->bindValue(':id', $id);
+		$sql->execute();
+	}
+
+	public function editNameItem($new_name, $id)
+	{
+		$sql = "UPDATE permission_items SET name = :name WHERE id = :id";
 		$sql = $this->db->prepare($sql);
 		$sql->bindValue(':name', $new_name);
 		$sql->bindValue(':id', $id);
@@ -119,11 +144,37 @@ class Permissions extends Model
 		}
 	}
 
+	public function deleteItem($id_item)
+	{
+		$sql = "SELECT id FROM permission_links WHERE id_permission_item = :id_item";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':id_item', $id_item);
+		$sql->execute();
+
+		if ($sql->rowCount() === 0) {
+			$sql = "DELETE FROM permission_items WHERE id = :id_item";
+			$sql = $this->db->prepare($sql);
+			$sql->bindValue(':id_item', $id_item);
+			$sql->execute();
+		}
+	}
+
 	public function addGroup($name)
 	{
 		$sql = "INSERT INTO permission_groups (name) VALUES (:name)";
 		$sql = $this->db->prepare($sql);
 		$sql->bindValue(':name', $name);
+		$sql->execute();
+
+		return $this->db->lastInsertId();
+	}
+
+	public function addItem($name, $slug)
+	{
+		$sql = "INSERT INTO permission_items (name, slug) VALUES (:name, :slug)";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':name', $name);
+		$sql->bindValue(':slug', $slug);
 		$sql->execute();
 
 		return $this->db->lastInsertId();
