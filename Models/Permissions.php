@@ -6,6 +6,20 @@ use \Core\Model;
 
 class Permissions extends Model 
 {
+	public function getPermissionGroupName($id_permission)
+	{
+		$sql = "SELECT name FROM permission_groups WHERE id = :id";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':id', $id_permission);
+		$sql->execute();
+
+		if ($sql->rowCount() > 0) {
+			$data = $sql->fetch();
+			return $data['name'];
+		} else {
+			return '';
+		}
+	}
 
 	public function getPermissions($id_permission)
 	{
@@ -66,6 +80,23 @@ class Permissions extends Model
 		}
 
 		return $array;
+	}
+
+	public function editName($new_name, $id)
+	{
+		$sql = "UPDATE permission_groups SET name = :name WHERE id = :id";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':name', $new_name);
+		$sql->bindValue(':id', $id);
+		$sql->execute();
+	}
+
+	public function clearLinks($id)
+	{
+		$sql = "DELETE FROM permission_links WHERE id_permission_group = :id";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':id', $id);
+		$sql->execute();
 	}
 
 	public function deleteGroup($id_group)

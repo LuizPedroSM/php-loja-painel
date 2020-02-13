@@ -83,4 +83,58 @@ class PermissionsController extends Controller
 			header("Location: ".BASE_URL.'permissions/add');exit;
 		}
 	}
+
+	public function edit($id)
+	{
+		if (!empty($id)) {			
+			$array = array(
+				'user' => $this->user,
+				'errorItems' => array()
+			);
+			$p = new Permissions();
+	
+			$array['permission_items'] = $p->getAllItems();
+			$array['permission_id'] = $id;
+			$array['permission_group_name'] = $p->getPermissionGroupName($id);
+			$array['permission_group_slugs'] = $p->getPermissions($id);
+	
+			if (isset($_SESSION['formError']) && count($_SESSION['formError']) > 0 ) {
+				$array['errorItems'] = $_SESSION['formError'];
+				unset($_SESSION['formError']);
+			}
+	
+			$this->loadTemplate('permissions_edit', $array);	
+		} else {			
+			header("Location: ".BASE_URL.'permissions');exit;	
+		}
+	}
+
+	public function edit_action($id)
+	{
+		if (!empty($id)) {			
+			$p = new Permissions();
+
+			if (!empty($_POST['name'])) {
+				$name = $_POST['name'];
+
+				$p->editName($name, $id);
+				$p->clearLinks($id);
+
+				if (isset($_POST['items']) && count($_POST['items']) > 0 ) {
+					$items = $_POST['items'];
+
+					foreach ($items as $item) {
+						$p->linkItemToGroup($item, $id);
+					}
+				}
+
+				header("Location: ".BASE_URL.'permissions');exit;
+			} else {
+				$_SESSION['formError'] = array('name');
+				header("Location: ".BASE_URL.'permissions/edit/'.$id);exit;
+			}
+		} else {			
+			header("Location: ".BASE_URL.'permissions');exit;	
+		}
+	}
 }
