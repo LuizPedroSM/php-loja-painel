@@ -8,13 +8,15 @@ class Users extends Model
 {
     private $uid;
     private $permissions;
+    private $userName;
+    private $isAdmin;
 
     public function isLogged()
     {
         if (!empty($_SESSION['token'])) {
             $token = $_SESSION['token'];
 
-            $sql = "SELECT id, id_permission FROM users WHERE token = :token";
+            $sql = "SELECT id, id_permission, name, admin FROM users WHERE token = :token";
             $sql = $this->db->prepare($sql);
             $sql->bindValue(':token', $token);
             $sql->execute();
@@ -24,12 +26,33 @@ class Users extends Model
 
                 $data = $sql->fetch();
                 $this->uid = $data['id'];
+                $this->userName = $data['name'];
+                $this->isAdmin = $data['admin'];
                 $this->permissions = $p->getPermissions($data['id_permission']);
 
                 return true;
             }
         }
         return false;
+    }
+    
+    public function getId()
+    {
+        return $this->uid;
+    }
+
+    public function getName()
+    {
+        return $this->userName;
+    }
+
+    public function isAdmin()
+    {
+        if ($this->isAdmin == '1') {
+            return true;    
+        } else {
+            return false;
+        }
     }
 
     public function hasPermission($permission_slug)
@@ -66,10 +89,5 @@ class Users extends Model
             return true;
         }
         return false;
-    }
-
-    public function getId()
-    {
-        return $this->uid;
     }
 }
