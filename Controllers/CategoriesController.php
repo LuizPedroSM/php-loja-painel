@@ -3,6 +3,7 @@ namespace Controllers;
 
 use \Core\Controller;
 use \Models\Users;
+use \Models\Categories;
 
 class CategoriesController extends Controller 
 {
@@ -21,13 +22,13 @@ class CategoriesController extends Controller
 		$this->arrayInfo = array(
 			'user' => $this->user,
 			'menuActive' => 'categories'
-		);		
-
+		);	
 	}
 
 	public function index() 
 	{
-		$this->arrayInfo['list'] = array();
+		$cat = new Categories();
+		$this->arrayInfo['list'] = $cat->getAll();
 		$this->loadTemplate('categories', $this->arrayInfo);
 	}
 }
