@@ -207,7 +207,7 @@ class PermissionsController extends Controller
 	private static function slugify($text)
 	{
 		// replace non letter or digits by -
-		$text = preg_replace('~[^\pL\d]+~u', '-', $text);
+		$text = preg_replace('~[^\pL\d]+~u', '_', $text);
 		// transliterate
 		$text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
 		// remove unwanted characters
@@ -215,7 +215,7 @@ class PermissionsController extends Controller
 		// trim
 		$text = trim($text, '-');
 		// remove duplicate -
-		$text = preg_replace('~-+~', '-', $text);
+		$text = preg_replace('~-+~', '_', $text);
 		// lowercase
 		$text = strtolower($text);
 

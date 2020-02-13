@@ -117,6 +117,12 @@ desired effect
           </li>
         <?php endif; ?>
 
+        <?php if( $viewData['user']->hasPermission('categories_view') ): ?>
+          <li class="<?php echo ($viewData['menuActive'] == 'categories')? 'active' : ''; ?>"><a href="<?php echo BASE_URL; ?>categories">
+            <i class="fa fa-link"></i> <span>Categorias</span></a>
+          </li>
+        <?php endif; ?>
+
       </ul>
       <!-- /.sidebar-menu -->
     </section>
