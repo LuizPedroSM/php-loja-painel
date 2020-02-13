@@ -36,6 +36,19 @@ class PermissionsController extends Controller
 		$this->loadTemplate('permissions', $array);		
 	}
 
+	public function items() 
+	{		
+		$array = array(
+			'user' => $this->user,
+			'list' => array()
+		);		
+
+		$p = new Permissions();
+		$array['list'] = $p->getAllItems();
+
+		$this->loadTemplate('permissions_items', $array);		
+	}
+
 	public function del($id_group)
 	{
 		$p = new Permissions();
