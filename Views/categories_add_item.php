@@ -1,3 +1,8 @@
+<?php 
+if (isset($selected) == false) {
+    $selected = '';
+}
+?>
 <?php foreach($items as $item): ?>
     <option <?php echo ($item['id'] == $selected)? 'selected="selected"': '';?> value="<?php echo $item['id'];?>">
         <?php 

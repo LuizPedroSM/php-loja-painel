@@ -110,4 +110,17 @@ class CategoriesController extends Controller
 			header("Location: ".BASE_URL.'categories/edit/'.$id);exit;
 		}
 	}
+
+	public function del($id)
+	{
+		if (!empty($id)) {
+			$cat = new Categories();
+			$cats = $cat->scanCategories($id);
+
+			if ($cat->hasProducts($cats) == false) {
+				$cat->deleteCategories($cats);
+			} 
+		} 
+		header("Location: ".BASE_URL.'categories/edit/'.$id);exit;
+	}
 }
