@@ -112,4 +112,22 @@ class PagesController extends Controller
 			header("Location: ".BASE_URL.'pages');exit;
 		}
 	}
+
+	public function upload()
+	{
+		if (!empty($_FILES['file']['tmp_name'])) {
+			$types_allowed = array('image/jpeg', 'image/png');
+
+			if (in_array($_FILES['file']['type'], $types_allowed)) {
+				$newname = md5(time().rand(0,999)).'jpg';
+
+				move_uploaded_file($_FILES['file']['tmp_name'], '../loja/media/pages/'.$newname);
+
+				$array = array(
+					'location' => BASE_URL_SITE.'media/pages/'.$newname
+				);
+				echo json_encode($array);exit;
+			}
+		}
+	}
 }
