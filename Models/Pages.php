@@ -16,4 +16,20 @@ class Pages extends Model {
 		return $array;
 	}
 
+	public function add($title, $body)
+	{
+		$sql = "INSERT INTO pages (title, body) VALUES (:title, :body)";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':title', $title);
+		$sql->bindValue(':body', $body);
+		$sql->execute();
+	}
+
+	public function del($id)
+	{
+		$sql = "DELETE FROM pages WHERE id = :id";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':id', $id);
+		$sql->execute();
+	}
 }

@@ -125,6 +125,6 @@ class CategoriesController extends Controller
 				$cat->deleteCategories($cats);
 			} 
 		} 
-		header("Location: ".BASE_URL.'categories/edit/'.$id);exit;
+		header("Location: ".BASE_URL.'categories');exit;
 	}
 }

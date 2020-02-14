@@ -36,4 +36,39 @@ class PagesController extends Controller
 		$this->arrayInfo['list'] = $p->getAll();
 		$this->loadTemplate('pages', $this->arrayInfo);
 	}
+
+	public function add() 
+	{
+		$this->arrayInfo['errorItems'] = array();
+		if (isset($_SESSION['formError']) && count($_SESSION['formError']) > 0 ) {
+			$this->arrayInfo['errorItems'] = $_SESSION['formError'];
+			unset($_SESSION['formError']);
+		}
+		$this->loadTemplate('pages_add', $this->arrayInfo);
+	}
+	
+	public function add_action()
+	{
+		if (!empty($_POST['title'])) {
+			$title = $_POST['title'];
+			$body = $_POST['body'];
+
+			$p = new Pages();
+			$p->add($title, $body);
+
+			header("Location: ".BASE_URL.'pages');exit;
+		} else {
+			$_SESSION['formError'] = array('title');
+			header("Location: ".BASE_URL.'pages/add');exit;
+		}
+	}
+
+	public function del($id)
+	{
+		if (!empty($id)) {
+			$p = new Pages();
+			$p = $p->del($id);
+		} 
+		header("Location: ".BASE_URL.'pages');exit;
+	}
 }
