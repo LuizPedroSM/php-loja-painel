@@ -18,6 +18,10 @@ class CategoriesController extends Controller
 		if (!$this->user->isLogged()) {
 			header("Location: ".BASE_URL."login");exit;
 		}
+		
+		if (!$this->user->hasPermission('categories_view')) {
+			header("Location: ".BASE_URL);exit;
+		}
 
 		$this->arrayInfo = array(
 			'user' => $this->user,
