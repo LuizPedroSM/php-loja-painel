@@ -13,6 +13,8 @@
         <div class="box-header">
             <h3 class="box-title">Lista de Produtos</h3>
             <div class="box-tools">
+                <a href="<?php echo BASE_URL.'options'; ?>"
+                 class="btn btn-primary" >Opções do Produto</a>
                 <a href="<?php echo BASE_URL.'products/add'; ?>"
                  class="btn btn-success" >Adicionar</a>
             </div>
