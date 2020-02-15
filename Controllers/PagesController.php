@@ -76,7 +76,7 @@ class PagesController extends Controller
 	{
 		if (!empty($id)) {
 			$p = new Pages();
-			$this->arrayInfo['info'] = $p = $p->get($id);
+			$this->arrayInfo['info'] = $p->get($id);
 
 			if (count($this->arrayInfo['info']) > 0) {	
 				$this->arrayInfo['errorItems'] = array();
