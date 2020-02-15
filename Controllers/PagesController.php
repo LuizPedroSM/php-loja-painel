@@ -67,7 +67,7 @@ class PagesController extends Controller
 	{
 		if (!empty($id)) {
 			$p = new Pages();
-			$p = $p->del($id);
+			$p->del($id);
 		} 
 		header("Location: ".BASE_URL.'pages');exit;
 	}

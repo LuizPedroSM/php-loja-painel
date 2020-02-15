@@ -32,15 +32,9 @@
                         <td>
                             <div class="btn-group">
                                 <a href="<?php echo BASE_URL.'permissions/edit/'.$item['id']; ?>" 
-                                class="btn btn-xs btn-primary">
-                                    Editar
-                                </a>
+                                class="btn btn-xs btn-primary">Editar</a>
                                 <a href="<?php echo BASE_URL.'permissions/del/'.$item['id']; ?>" 
-                                class="btn btn-xs btn-danger"
-                                <?php echo ($item['total_users'] != '0')? 'disabled':'' ?>
-                                >
-                                    Excluir
-                                </a>
+                                class="btn btn-xs btn-danger <?php echo ($item['total_users'] != '0')? 'disabled':'' ?>" >Excluir</a>
                             </div>
                         </td>
                     </tr>

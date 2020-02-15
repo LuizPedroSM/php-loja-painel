@@ -5,9 +5,17 @@ use \Core\Model;
 
 class Brands extends Model 
 {
-	public function getAll() {
+	public function getAll($show_product_count = false) {
 		$array = array();
-		$sql = "SELECT * FROM brands";
+		if ($show_product_count) {
+			$sql = "SELECT *,
+			(SELECT COUNT(*) FROM products 
+			WHERE products.id_brand = brands.id)
+			 as product_count
+			 FROM brands";
+		} else {			
+			$sql = "SELECT * FROM brands";
+		}
 		$sql = $this->db->query($sql);
 
 		if ($sql->rowCount() > 0) {
@@ -44,5 +52,21 @@ class Brands extends Model
 		$sql->bindValue(':name', $name);
 		$sql->bindValue(':id', $id);
 		$sql->execute();
+	}
+	
+	public function del($id)
+	{
+		$sql = "SELECT COUNT(*) as c FROM products WHERE id_brand = :id";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':id', $id);
+		$sql->execute();
+		$data = $sql->fetch();
+
+		if ($data['c'] == '0') {			
+			$sql = "DELETE FROM brands WHERE id = :id";
+			$sql = $this->db->prepare($sql);
+			$sql->bindValue(':id', $id);
+			$sql->execute();
+		}
 	}
 }

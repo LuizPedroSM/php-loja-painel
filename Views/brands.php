@@ -22,6 +22,7 @@
                 <thead>
                     <tr>                
                         <th>Nome da marca</th>
+                        <th width="150">Qtd. de Produtos</th>
                         <th width="130">Ações</th>
                     </tr>
                 </thead>
@@ -29,12 +30,13 @@
                   <?php foreach($list as $item): ?>
                     <tr>
                         <td><?php echo $item['name'];?></td>
+                        <td><?php echo $item['product_count'];?></td>
                         <td>
                             <div class="btn-group">
                                 <a href="<?php echo BASE_URL.'brands/edit/'.$item['id']; ?>" 
                                 class="btn btn-xs btn-primary">Editar</a>
                                 <a href="<?php echo BASE_URL.'brands/del/'.$item['id']; ?>" 
-                                class="btn btn-xs btn-danger">Excluir</a>
+                                class="btn btn-xs btn-danger <?php echo ($item['product_count'] != '0')? 'disabled':'' ?>">Excluir</a>
                             </div>
                         </td>
                     </tr>

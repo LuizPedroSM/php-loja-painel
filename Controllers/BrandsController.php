@@ -32,7 +32,7 @@ class BrandsController extends Controller
 	public function index() 
 	{
 		$b = new Brands();
-		$this->arrayInfo['list'] = $b->getAll();
+		$this->arrayInfo['list'] = $b->getAll(true);
 		$this->loadTemplate('brands', $this->arrayInfo);
 	}
 		
@@ -99,5 +99,14 @@ class BrandsController extends Controller
 		} else {
 			header("Location: ".BASE_URL.'brands');exit;
 		}
+	}
+
+	public function del($id)
+	{
+		if (!empty($id)) {
+			$b = new Brands();
+			$b->del($id);
+		} 
+		header("Location: ".BASE_URL.'brands');exit;
 	}
 }
