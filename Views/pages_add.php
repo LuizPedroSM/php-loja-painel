@@ -34,3 +34,16 @@
 
 </section>
 <!-- /.content -->
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js" ></script>
+<script>
+tinymce.init({
+    selector:'#page_body',
+    height:300,
+    menubar:false,
+    plugins:['link','table', 'image', 'autoresize', 'lists'],
+    toolbar:'undo redo | formatselect | bold italic backcolor | media image | alignleft aligncenter alignright alignjustify | table | link | bullist numlist | removeformat',
+    automatic_uploads:true,
+    filter_picker_types:'image',
+    images_upload_url:'<?php echo BASE_URL; ?>pages/upload'
+});
+</script>
