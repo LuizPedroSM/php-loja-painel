@@ -1,3 +1,9 @@
 .user-panel > .info {
   position: unset;
 }
+.products_files_area {
+  margin-top: 10px;
+}
+.products_files_area input {
+  margin-top: 10px;
+}
