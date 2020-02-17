@@ -118,4 +118,29 @@ class ProductsController extends Controller
 			header("Location: ".BASE_URL.'products/add');exit;
 		}
 	}
+				
+	public function edit($id) 
+	{
+		if (!empty($id)) {
+			$cat = new Categories();
+			$brands = new Brands();
+			$options = new Options();
+			$products = new Products();
+	
+			$this->arrayInfo['cat_list'] = $cat->getAll();
+			$this->arrayInfo['brands_list'] = $brands->getAll();
+			$this->arrayInfo['options_list'] = $options->getAll();
+			$this->arrayInfo['errorItems'] = array();
+			
+			if (isset($_SESSION['formError']) && count($_SESSION['formError']) > 0 ) {
+				$this->arrayInfo['errorItems'] = $_SESSION['formError'];
+				unset($_SESSION['formError']);
+			}
+			$this->arrayInfo['info'] = $products->get($id);
+			
+			$this->loadTemplate('products_edit', $this->arrayInfo);			
+		} else {			
+			header("Location: ".BASE_URL.'products');exit;
+		}
+	}
 }

@@ -5,6 +5,50 @@ use \Core\Model;
 
 class Products extends Model 
 {
+	public function get($id)
+	{
+		$array = array();			
+		$sql = "SELECT * FROM products WHERE id = :id";		
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':id', $id);
+		$sql->execute();
+
+		if ($sql->rowCount() > 0) {
+			$array  = $sql->fetch(\PDO::FETCH_ASSOC);
+
+			// Pegando as OPTIONS do produto
+			$sql = "SELECT id_option, p_value FROM products_options WHERE id_product = :id";		
+			$sql = $this->db->prepare($sql);
+			$sql->bindValue(':id', $id);
+			$sql->execute();
+
+			if ($sql->rowCount() > 0) {
+				$ops = $sql->fetchAll(\PDO::FETCH_ASSOC);	
+
+				$array['options'] = array();
+				foreach ($ops as $item) {
+					$array['options'][$item['id_option']] = $item['p_value'];
+				}	
+			}
+			
+			// Pegando as IMAGENS do produto
+			$sql = "SELECT id, url FROM products_images WHERE id_product = :id";		
+			$sql = $this->db->prepare($sql);
+			$sql->bindValue(':id', $id);
+			$sql->execute();
+
+			if ($sql->rowCount() > 0) {
+				$imgs = $sql->fetchAll(\PDO::FETCH_ASSOC);	
+
+				$array['images'] = array();
+				foreach ($imgs as $item) {
+					$array['images'][$item['id']] = BASE_URL_SITE.'media/products/'.$item['url'];
+				}	
+			}
+		}
+		return $array;
+	}
+
 	public function getAll() {
 		$array = array();			
 		$sql = "SELECT id, id_category, id_brand, name, stock, price, price_from FROM products";		
@@ -91,7 +135,7 @@ class Products extends Model
 				$sql->bindValue(':id_option', $optk);
 				$sql->bindValue(':p_value', $opt);
 				$sql->execute();
-				$sql->debugDumpParams();
+				// $sql->debugDumpParams();
 			}
 
 			//add imgs
@@ -166,8 +210,7 @@ class Products extends Model
 			$sql->bindValue(':id_product', $id);
 			$sql->bindValue(':url', $filename);
 			$sql->execute();
-			$sql->debugDumpParams();
-
+			// $sql->debugDumpParams();
 		}
 	}
 
