@@ -101,8 +101,6 @@ class Products extends Model
 				'image/png',
 			);
 
-			$id = 123;
-
 			for ($q=0; $q < count($images['name']); $q++) { 
 				$tmp_name = $images['tmp_name'][$q];
 				$type = $images['type'][$q];
@@ -161,7 +159,7 @@ class Products extends Model
 			$img = imagecreatetruecolor($width, $height);
 			imagecopyresampled($img, $o_img, -$px, -$py, 0, 0, $img_w, $img_h, $o_width, $o_height);
 			$filename = md5(time().rand(0,999)).'.jpg';
-			imagejpeg($img, '../loja/media/products/'.$filename);
+			imagejpeg($img, PATH_SITE.'media/products/'.$filename);
 
 			$sql = "INSERT INTO products_images (id_product, url) VALUES (:id_product, :url)";
 			$sql = $this->db->prepare($sql);
