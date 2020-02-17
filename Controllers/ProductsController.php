@@ -59,7 +59,6 @@ class ProductsController extends Controller
 			
 	public function add_action()
 	{ 
-
 		if (!empty($_POST['name'])) {
 			$id_category = $_POST['id_category'];
 			$id_brand = $_POST['id_brand'];
@@ -80,6 +79,8 @@ class ProductsController extends Controller
 			$new_product = (isset($_POST['new_product']))? '1' : '0';
 
 			$options = $_POST['options'];	
+
+			$images = (!empty($_FILES['images'])? $_FILES['images']: array());
 
 			if (!empty($id_category) && !empty($id_brand) && !empty($name) && !empty($stock) && !empty($price)) {
 				$products = new Products();
@@ -103,7 +104,8 @@ class ProductsController extends Controller
 					$bestseller, 
 					$new_product, 
 									
-					$options
+					$options,
+					$images
 				);
 			} else {
 				$_SESSION['formError'] = array('id_category', 'id_brand', 'name', 'stock', 'price');

@@ -11,7 +11,7 @@
 <!-- Main content -->
 <section class="content container-fluid">
 
-<form action="<?php echo BASE_URL; ?>products/add_action" method="post">
+<form action="<?php echo BASE_URL; ?>products/add_action" method="post" enctype="multipart/form-data" >
     <div class="box">
         <div class="box-header">
             <h3 class="box-title">Novo Produto</h3>
