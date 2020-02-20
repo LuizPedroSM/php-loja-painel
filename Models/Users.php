@@ -90,4 +90,21 @@ class Users extends Model
         }
         return false;
     }
+
+    public function getAll() {
+		$array = array();		
+        $sql = "SELECT users.id, users.name, users.email, users.admin,
+        permission_groups.name as permission_name
+        FROM users 
+        LEFT JOIN permission_groups
+        ON permission_groups.id = users.id_permission
+        ORDER BY admin DESC, users.name ASC";		
+		$sql = $this->db->query($sql);
+
+		if ($sql->rowCount() > 0) {
+			$array  = $sql->fetchAll(\PDO::FETCH_ASSOC);
+		}
+		return $array;
+	}
+    
 }
