@@ -3,6 +3,7 @@ namespace Controllers;
 
 use \Core\Controller;
 use \Models\Users;
+use \Models\Permissions;
 
 class UsersController extends Controller 
 {
@@ -31,7 +32,19 @@ class UsersController extends Controller
 	public function index() 
 	{
 		$users = new Users();
-		$this->arrayInfo['list'] = $users->getAll();
+		$permissions = new Permissions();
+
+		$this->arrayInfo['filter'] = array('name' => '', 'permission' => '');
+
+		if (!empty($_GET['name'])) {
+			$this->arrayInfo['filter']['name'] = $_GET['name'];			
+		}
+		if (!empty($_GET['permission'])) {
+			$this->arrayInfo['filter']['permission'] = $_GET['permission'];			
+		}
+		
+		$this->arrayInfo['permission_list'] = $permissions->getAllGroups();
+		$this->arrayInfo['list'] = $users->getAll($this->arrayInfo['filter']);
 		$this->loadTemplate('users', $this->arrayInfo);
 	}
 		

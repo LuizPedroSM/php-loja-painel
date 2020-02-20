@@ -91,15 +91,41 @@ class Users extends Model
         return false;
     }
 
-    public function getAll() {
-		$array = array();		
+    public function getAll($filter = array()) {
+        $array = array();	
+        $sqlfilter = array();	
+                
+        if (!empty($filter['name'])) {
+            $sqlfilter[]= '(users.name LIKE :name OR users.email LIKE :email)';
+        }
+
+        if (!empty($filter['permission'])) {
+            $sqlfilter[]= '(users.id_permission = :permission)';
+        }
+        
         $sql = "SELECT users.id, users.name, users.email, users.admin,
         permission_groups.name as permission_name
         FROM users 
         LEFT JOIN permission_groups
-        ON permission_groups.id = users.id_permission
-        ORDER BY admin DESC, users.name ASC";		
-		$sql = $this->db->query($sql);
+        ON permission_groups.id = users.id_permission";
+
+        if (count($sqlfilter) > 0 ) {
+            $sql .= " WHERE ".implode(' AND ', $sqlfilter);
+        }
+
+        $sql .= " ORDER BY admin DESC, users.name ASC";		
+        $sql = $this->db->prepare($sql);
+        
+        if (!empty($filter['name'])) {
+            $sql->bindValue('name', '%'.$filter['name'].'%');
+            $sql->bindValue('email', '%'.$filter['name'].'%');
+        }
+
+        if (!empty($filter['permission'])) {
+            $sql->bindValue('permission', $filter['permission']);
+        }
+
+        $sql->execute();
 
 		if ($sql->rowCount() > 0) {
 			$array  = $sql->fetchAll(\PDO::FETCH_ASSOC);

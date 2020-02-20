@@ -9,6 +9,39 @@
 
 <!-- Main content -->
 <section class="content container-fluid">
+
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Filtro</h3>
+        </div>
+        <div class="box-body">
+            <form action="" method="get">            
+                <div class="row">
+                    <div class="col-sm-5">
+                        <label for="form_user">Nome ou E-mail</label>
+                        <input type="text" name="name" id="form_user" class="form-control" value="<?php echo $filter['name'];?>">
+                    </div>
+                    <div class="col-sm-5">
+                        <label for="form_permission">Nível de Permissão</label>
+                        <select type="text" name="permission" id="form_permission" class="form-control">
+                            <option></option>
+                            <?php foreach($permission_list as $item): ?>
+                                <option value="<?php echo $item['id'];?>" <?php echo ($filter['permission'] == $item['id'])? 'selected' : '';?>>
+                                    <?php echo $item['name'];?>
+                                </option>
+                            <?php endforeach; ?>
+                            
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <label>&nbsp;</label> <br>
+                        <input type="submit" value="Filtrar" class="btn btn-info">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="box">
         <div class="box-header">
             <h3 class="box-title">Lista de Usuários</h3>
