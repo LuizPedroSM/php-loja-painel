@@ -7,6 +7,7 @@ use \Models\Brands;
 use \Models\Categories;
 use \Models\Products;
 use \Models\Options;
+use \Models\Rates;
 
 class ProductsController extends Controller 
 {
@@ -126,6 +127,7 @@ class ProductsController extends Controller
 			$brands = new Brands();
 			$options = new Options();
 			$products = new Products();
+			$rates = new Rates();
 	
 			$this->arrayInfo['cat_list'] = $cat->getAll();
 			$this->arrayInfo['brands_list'] = $brands->getAll();
@@ -136,7 +138,9 @@ class ProductsController extends Controller
 				$this->arrayInfo['errorItems'] = $_SESSION['formError'];
 				unset($_SESSION['formError']);
 			}
+
 			$this->arrayInfo['info'] = $products->get($id);
+			$this->arrayInfo['rates'] = $rates->getRatesFromProduct($id);
 			
 			$this->loadTemplate('products_edit', $this->arrayInfo);			
 		} else {			
@@ -217,6 +221,19 @@ class ProductsController extends Controller
 		if (!empty($id)) {
 			$products = new Products();
 			$products->del($id);
+		}
+		header("Location: ".BASE_URL."products");exit;
+	}
+
+	public function del_rate($id_rate)
+	{
+		if (!empty($id_rate)) {
+			$rates = new Rates();
+			$id_product = $rates->del($id_rate);
+
+			if ($id_product > 0 ) {				
+				header("Location: ".BASE_URL."products/edit/".$id_product);exit;
+			}
 		}
 		header("Location: ".BASE_URL."products");exit;
 	}

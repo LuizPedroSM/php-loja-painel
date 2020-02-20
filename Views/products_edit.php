@@ -147,6 +147,48 @@
 </form>
 
 </section>
+
+<section class="content container-fluid">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Avaliações</h3>
+        </div>
+        <div class="box-body">
+        <?php if(count($rates) > 0): ?>
+            <table class="table">
+                <thead>
+                    <tr>                
+                        <th>Autor</th>
+                        <th>Data da avaliação</th>
+                        <th>Pontos</th>
+                        <th>Comentário</th>                        
+                        <th width="130">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <?php foreach($rates as $rate): ?>
+                    <tr>
+                        <td><?php echo $rate['name'];?></td>
+                        <td><?php echo date('d/m/Y H:i', strtotime($rate['date_rated'])) ;?></td>
+                        <td><?php echo $rate['points'];?></td>
+                        <td><?php echo $rate['comment'];?></td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="<?php echo BASE_URL.'products/del_rate/'.$rate['id']; ?>" 
+                                class="btn btn-xs btn-danger">Excluir</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endforeach;?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <span>Este Produto ainda não possui Avaliações</span>
+        <?php endif; ?>
+        </div>
+    </div>
+</section>
+
 <!-- /.content -->
 <script src="https://cloud.tinymce.com/stable/tinymce.min.js" ></script>
 <script>
