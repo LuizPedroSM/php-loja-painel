@@ -90,12 +90,11 @@ class Users extends Model
         }
         return false;
     }
-        
-    public function getTotal($filter = array()) 
+
+    private function buildGetFilterSql($filter)
     {
-        $array = array();	
-                
         $sqlfilter = array();	
+
         if (!empty($filter['name'])) {
             $sqlfilter[]= '(users.name LIKE :name OR users.email LIKE :email)';
         }
@@ -103,15 +102,12 @@ class Users extends Model
         if (!empty($filter['permission'])) {
             $sqlfilter[]= '(users.id_permission = :permission)';
         }
-        
-        $sql = "SELECT COUNT(*) as c FROM users ";
 
-        if (count($sqlfilter) > 0 ) {
-            $sql .= " WHERE ".implode(' AND ', $sqlfilter);
-        }
+        return $sqlfilter;
+    }
 
-        $sql = $this->db->prepare($sql);
-        
+    private function buildGetFilterBind($filter, &$sql)
+    {
         if (!empty($filter['name'])) {
             $sql->bindValue('name', '%'.$filter['name'].'%');
             $sql->bindValue('email', '%'.$filter['name'].'%');
@@ -120,6 +116,22 @@ class Users extends Model
         if (!empty($filter['permission'])) {
             $sql->bindValue('permission', $filter['permission']);
         }
+    }
+        
+    public function getTotal($filter = array()) 
+    {
+        $array = array();	
+        $sqlfilter = $this->buildGetFilterSql($filter);
+
+        
+        $sql = "SELECT COUNT(*) as c FROM users ";
+
+        if (count($sqlfilter) > 0 ) {
+            $sql .= " WHERE ".implode(' AND ', $sqlfilter);
+        }
+
+        $sql = $this->db->prepare($sql);
+        $this->buildGetFilterBind($filter,$sql);       
 
         $sql->execute();
         $data  = $sql->fetch(\PDO::FETCH_ASSOC);
@@ -140,14 +152,7 @@ class Users extends Model
             $pagfilter['offset']= $pag['currentpage'] * $pagfilter['limit'];
         }
 
-        $sqlfilter = array();	
-        if (!empty($filter['name'])) {
-            $sqlfilter[]= '(users.name LIKE :name OR users.email LIKE :email)';
-        }
-
-        if (!empty($filter['permission'])) {
-            $sqlfilter[]= '(users.id_permission = :permission)';
-        }
+        $sqlfilter = $this->buildGetFilterSql($filter);
         
         $sql = "SELECT users.id, users.name, users.email, users.admin,
         permission_groups.name as permission_name
@@ -162,14 +167,7 @@ class Users extends Model
         $sql .= " ORDER BY admin DESC, users.name ASC LIMIT ".$pagfilter['offset'].', '.$pagfilter['limit'];		
         $sql = $this->db->prepare($sql);
         
-        if (!empty($filter['name'])) {
-            $sql->bindValue('name', '%'.$filter['name'].'%');
-            $sql->bindValue('email', '%'.$filter['name'].'%');
-        }
-
-        if (!empty($filter['permission'])) {
-            $sql->bindValue('permission', $filter['permission']);
-        }
+        $this->buildGetFilterBind($filter,$sql);  
 
         $sql->execute();
 
