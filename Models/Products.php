@@ -92,17 +92,16 @@ class Products extends Model
 									
 					$options,
 					$images)
-	{
-
-		$options_selected = array();
-		foreach ($options as $optk => $opt) {
-			if (!empty($opt)) {
-				$options_selected[$optk] = $opt; 
+	{		
+		if (!empty($id_category) && !empty($id_brand) && !empty($name) && !empty($stock) && !empty($price)) {	
+			$options_selected = array();
+			foreach ($options as $optk => $opt) {
+				if (!empty($opt)) {
+					$options_selected[$optk] = $opt; 
+				}
 			}
-		}
-		$options_ids = implode(',', array_keys($options_selected));
+			$options_ids = implode(',', array_keys($options_selected));
 
-		if (!empty($id_category) && !empty($id_brand) && !empty($name) && !empty($stock) && !empty($price)) {
 			$sql = "INSERT INTO products 
 			(id_category, id_brand, name, description, stock, price_from, price, weight, width, height, length, diameter, featured, sale, bestseller, new_product, options ) VALUES
 			(:id_category, :id_brand, :name, :description, :stock, :price_from, :price, :weight, :width, :height, :length, :diameter, :featured, :sale, :bestseller, :new_product, :options )";
@@ -211,6 +210,108 @@ class Products extends Model
 			$sql->bindValue(':url', $filename);
 			$sql->execute();
 			// $sql->debugDumpParams();
+		}
+	}
+	
+	public function edit(
+					$id_category, 
+					$id_brand, 
+					$name, 
+					$description, 
+					$stock, 
+					$price_from, 
+					$price, 
+					
+					$weight,
+					$width, 
+					$height, 
+					$length, 
+					$diameter, 
+					
+					$featured, 
+					$sale, 
+					$bestseller, 
+					$new_product, 
+									
+					$options,
+					$images,
+					$c_images,
+					
+					$id)
+	{		
+		if (!empty($id) && !empty($id_category) && !empty($id_brand) && !empty($name) && !empty($stock) && !empty($price)) {
+	
+			$options_selected = array();
+			foreach ($options as $optk => $opt) {
+				if (!empty($opt)) {
+					$options_selected[$optk] = $opt; 
+				}
+			}
+			$options_ids = implode(',', array_keys($options_selected));
+
+			$sql = "UPDATE products SET
+			id_category = :id_category, id_brand = :id_brand, name = :name, description = :description, stock = :stock, price_from = :price_from, price = :price, weight = :weight, width = :width, height = :height, length = :length, diameter = :diameter, featured = :featured, sale = :sale, bestseller = :bestseller, new_product = :new_product, options = :options WHERE id = :id";
+			$sql = $this->db->prepare($sql);
+			$sql->bindValue(':id_category', $id_category);
+			$sql->bindValue(':id_brand', $id_brand);
+			$sql->bindValue(':name', $name);
+			$sql->bindValue(':description', $description);
+			$sql->bindValue(':stock', $stock);
+			$sql->bindValue(':price_from', $price_from);
+			$sql->bindValue(':price', $price);
+			$sql->bindValue(':weight', $weight);
+			$sql->bindValue(':width', $width);
+			$sql->bindValue(':height', $height);
+			$sql->bindValue(':length', $length);
+			$sql->bindValue(':diameter', $diameter);
+			$sql->bindValue(':featured', $featured);
+			$sql->bindValue(':sale', $sale);
+			$sql->bindValue(':bestseller', $bestseller);
+			$sql->bindValue(':new_product', $new_product);
+			$sql->bindValue(':options', $options_ids);
+			$sql->bindValue(':id', $id);
+			$sql->execute();
+			
+			$sql = "DELETE FROM products_options WHERE id_product = :id";
+			$sql = $this->db->prepare($sql);
+			$sql->bindValue(':id', $id);
+			$sql->execute();
+			
+			foreach ($options_selected as $optk => $opt) {
+				$sql = "INSERT INTO products_options (id_product, id_option, p_value) VALUES (:id_product, :id_option, :p_value)";
+				$sql = $this->db->prepare($sql);
+				$sql->bindValue(':id_product', $id);
+				$sql->bindValue(':id_option', $optk);
+				$sql->bindValue(':p_value', $opt);
+				$sql->execute();
+			}
+			// del imgs
+
+			if (is_array($c_images)) {		
+				foreach ($c_images as $ckey => $cimg) {
+					$c_images[$ckey] = intval($cimg);
+				}
+				$sql = "DELETE FROM products_images WHERE id_product = :id AND id NOT IN (".implode(',', $c_images).")";
+				$sql = $this->db->prepare($sql);
+				$sql->bindValue(':id', $id);
+				$sql->execute();
+			}
+
+			//add imgs
+			$allowed_images = array(
+				'image/jpeg',
+				'image/jpg',
+				'image/png',
+			);
+
+			for ($q=0; $q < count($images['name']); $q++) { 
+				$tmp_name = $images['tmp_name'][$q];
+				$type = $images['type'][$q];
+
+				if (in_array($type, $allowed_images)) {
+					$this->addProductImage($id, $tmp_name, $type);
+				}
+			}
 		}
 	}
 

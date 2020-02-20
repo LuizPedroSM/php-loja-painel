@@ -3,4 +3,8 @@ $(function () {
         e.preventDefault();
         $('.products_files_area').append('<input type="file" name="images[]" id="file">');
     });
+
+    $('.p_image a').on('click', function () {
+        $(this).parent().remove();
+    });
 });

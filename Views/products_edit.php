@@ -129,11 +129,12 @@
 
             <label>Imagens do Produto</label> 
             <div class="images_area">
-                <?php foreach($info['images'] as $id_product => $url): ?>
+                <?php foreach($info['images'] as $id_image => $url): ?>
                     <div class="p_image"> 
                         <img src="<?php echo $url; ?>" alt=""> <br>
-                        <a href="<?php echo $id_product; ?>" 
+                        <a href="javascript:;"  
                         class="btn btn-xs btn-danger">Excluir</a>
+                        <input type="hidden" name="c_images[]" value="<?php echo $id_image; ?>">
                     </div>
                 <?php endforeach; ?>
             </div>
