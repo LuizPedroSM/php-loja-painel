@@ -82,6 +82,20 @@
                     <?php endforeach;?>
                 </tbody>
             </table>
+
+            <hr>
+
+            <?php 
+                $total_pages = ceil($pag['total'] / $pag['per_page']);
+                $items = $_GET;
+                unset($items['url']);
+            ?>
+            <?php for ($q=0; $q < $total_pages; $q++): ?>
+                <a href="<?php $items['p'] = ($q + 1); echo BASE_URL.'users?'.http_build_query($items); ?>">
+                    <?php echo($q == $pag['currentpage'])?'<strong>[ '.($q + 1).' ]</strong>': '[ '.($q + 1).' ]'?>
+                </a>
+            <?php endfor;?>
+
         </div>
     </div>
 </section>

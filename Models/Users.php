@@ -90,11 +90,57 @@ class Users extends Model
         }
         return false;
     }
-
-    public function getAll($filter = array()) {
+        
+    public function getTotal($filter = array()) 
+    {
         $array = array();	
-        $sqlfilter = array();	
                 
+        $sqlfilter = array();	
+        if (!empty($filter['name'])) {
+            $sqlfilter[]= '(users.name LIKE :name OR users.email LIKE :email)';
+        }
+
+        if (!empty($filter['permission'])) {
+            $sqlfilter[]= '(users.id_permission = :permission)';
+        }
+        
+        $sql = "SELECT COUNT(*) as c FROM users ";
+
+        if (count($sqlfilter) > 0 ) {
+            $sql .= " WHERE ".implode(' AND ', $sqlfilter);
+        }
+
+        $sql = $this->db->prepare($sql);
+        
+        if (!empty($filter['name'])) {
+            $sql->bindValue('name', '%'.$filter['name'].'%');
+            $sql->bindValue('email', '%'.$filter['name'].'%');
+        }
+
+        if (!empty($filter['permission'])) {
+            $sql->bindValue('permission', $filter['permission']);
+        }
+
+        $sql->execute();
+        $data  = $sql->fetch(\PDO::FETCH_ASSOC);
+        
+		return $data['c'];
+	}
+
+    public function getAll($filter = array(), $pag = array()) {
+        $array = array();	
+                
+        $pagfilter = array('offset' => 0, 'limit' => 2);	
+
+        if (!empty($pag['per_page'])) {
+            $pagfilter['limit']= $pag['per_page'] ;
+        }
+
+        if (!empty($pag['currentpage'])) {
+            $pagfilter['offset']= $pag['currentpage'] * $pagfilter['limit'];
+        }
+
+        $sqlfilter = array();	
         if (!empty($filter['name'])) {
             $sqlfilter[]= '(users.name LIKE :name OR users.email LIKE :email)';
         }
@@ -113,7 +159,7 @@ class Users extends Model
             $sql .= " WHERE ".implode(' AND ', $sqlfilter);
         }
 
-        $sql .= " ORDER BY admin DESC, users.name ASC";		
+        $sql .= " ORDER BY admin DESC, users.name ASC LIMIT ".$pagfilter['offset'].', '.$pagfilter['limit'];		
         $sql = $this->db->prepare($sql);
         
         if (!empty($filter['name'])) {

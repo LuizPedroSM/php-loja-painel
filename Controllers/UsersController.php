@@ -34,6 +34,7 @@ class UsersController extends Controller
 		$users = new Users();
 		$permissions = new Permissions();
 
+		// FILTRO
 		$this->arrayInfo['filter'] = array('name' => '', 'permission' => '');
 
 		if (!empty($_GET['name'])) {
@@ -43,8 +44,16 @@ class UsersController extends Controller
 			$this->arrayInfo['filter']['permission'] = $_GET['permission'];			
 		}
 		
+		// PAGINAÇÃO
+		$this->arrayInfo['pag'] = array('currentpage' => 0, 'total' => 0, 'per_page' => 2);
+		
+		if (!empty($_GET['p'])) {
+			$this->arrayInfo['pag']['currentpage'] = intval($_GET['p'] - 1);			
+		}
+
 		$this->arrayInfo['permission_list'] = $permissions->getAllGroups();
-		$this->arrayInfo['list'] = $users->getAll($this->arrayInfo['filter']);
+		$this->arrayInfo['list'] = $users->getAll( $this->arrayInfo['filter'], $this->arrayInfo['pag']);
+		$this->arrayInfo['pag']['total'] = $users->getTotal($this->arrayInfo['filter']);
 		$this->loadTemplate('users', $this->arrayInfo);
 	}
 		
