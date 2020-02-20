@@ -315,4 +315,12 @@ class Products extends Model
 		}
 	}
 
+	public function del($id)
+	{
+		$sql = "UPDATE products SET stock = 0 WHERE id = :id";
+		$sql = $this->db->prepare($sql);
+		$sql->bindValue(':id', $id);
+		$sql->execute();
+	}
+
 }

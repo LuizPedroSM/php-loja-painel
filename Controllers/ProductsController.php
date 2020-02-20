@@ -145,8 +145,7 @@ class ProductsController extends Controller
 	}
 
 	public function edit_action()
-	{ 
-		
+	{ 		
 		if (!empty($_POST['id'])) {
 			$id = $_POST['id'];
 			$id_category = $_POST['id_category'];
@@ -211,5 +210,14 @@ class ProductsController extends Controller
 			$_SESSION['formError'] = array();
 			header("Location: ".BASE_URL.'products');exit;
 		}
+	}
+
+	public function del($id)
+	{
+		if (!empty($id)) {
+			$products = new Products();
+			$products->del($id);
+		}
+		header("Location: ".BASE_URL."products");exit;
 	}
 }
