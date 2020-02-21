@@ -1,12 +1,13 @@
 {
-	"require:":{
-
-	},
-	"autoload":{
-		"psr-4":{
-			"Controllers\\":"Controllers/",
-			"Models\\":"Models/",
-			"Core\\":"Core/"
+	"require:": {},
+	"autoload": {
+		"psr-4": {
+			"Controllers\\": "Controllers/",
+			"Models\\": "Models/",
+			"Core\\": "Core/"
 		}
+	},
+	"require": {
+		"almasaeed2010/adminlte": "~2.4"
 	}
 }
